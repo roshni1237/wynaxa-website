@@ -11,9 +11,26 @@ export default function InvestorAccess() {
   const [accessGranted, setAccessGranted] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', company: '', linkedin: '' })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   setAccessGranted(true)
+  // }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setAccessGranted(true)
+    try {
+      const response = await fetch('/api/investor-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      const data = await response.json()
+      if (data.success) {
+        setAccessGranted(true)
+      }
+    } catch (error) {
+      alert('Failed to submit request. Please try again.')
+    }
   }
 
   if (!accessGranted) {

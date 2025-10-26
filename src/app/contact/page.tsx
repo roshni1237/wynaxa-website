@@ -14,11 +14,29 @@ export default function Contact() {
     message: ''
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Thank you for your message! We will get back to you soon.')
-    setFormData({ name: '', email: '', subject: '', message: '' })
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   alert('Thank you for your message! We will get back to you soon.')
+  //   setFormData({ name: '', email: '', subject: '', message: '' })
+  // }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    const data = await response.json()
+    if (data.success) {
+      alert('Thank you! We will get back to you within 24-48 hours.')
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    }
+  } catch (error) {
+    alert('Failed to send. Please try again.')
   }
+}
 
   return (
     <div className="flex flex-col">
